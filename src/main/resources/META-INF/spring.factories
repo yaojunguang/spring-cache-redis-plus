@@ -1,0 +1,6 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.smarthito.cache.init.SpringCacheRedisPlusAutoConfiguration
+org.springframework.context.ApplicationContextInitializer=\
+com.smarthito.cache.init.SpringCacheRedisPlusApplicationContextInitializer
+org.springframework.boot.env.EnvironmentPostProcessor=\
+com.smarthito.cache.init.SpringCacheRedisPlusApplicationContextInitializer
