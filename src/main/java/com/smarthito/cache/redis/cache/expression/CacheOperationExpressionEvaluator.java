@@ -55,11 +55,6 @@ public class CacheOperationExpressionEvaluator extends CachedExpressionEvaluator
             new ConcurrentHashMap<AnnotatedElementKey, Method>(64);
 
 
-    /**
-     * Create an {@link EvaluationContext} without a return value.
-     *
-     * @see #createEvaluationContext(Collection, Method, Object[], Object, Class, Object, BeanFactory)
-     */
     public EvaluationContext createEvaluationContext(Collection<? extends Cache> caches,
                                                      Method method, Object[] args, Object target, Class<?> targetClass, BeanFactory beanFactory) {
 
@@ -110,9 +105,6 @@ public class CacheOperationExpressionEvaluator extends CachedExpressionEvaluator
         return getExpression(this.unlessCache, methodKey, unlessExpression).getValue(evalContext, boolean.class);
     }
 
-    /**
-     * Clear all caches.
-     */
     void clear() {
         this.keyCache.clear();
         this.conditionCache.clear();

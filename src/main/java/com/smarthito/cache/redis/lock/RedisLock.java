@@ -37,8 +37,6 @@ import java.util.UUID;
  * 如果服务器返回 NIL ，那么客户端获取锁失败，可以在稍后再重试。
  *
  * @author yuhao.wangwang
- * @version 1.0
- * @date 2017年11月3日 上午10:21:27
  */
 public class RedisLock {
 
@@ -122,7 +120,7 @@ public class RedisLock {
     /**
      * 使用默认的锁过期时间和请求锁的超时时间
      *
-     * @param redisTemplate
+     * @param redisTemplate a
      * @param lockKey       锁的key（Redis的Key）
      */
     public RedisLock(RedisTemplate redisTemplate, String lockKey) {
@@ -133,7 +131,7 @@ public class RedisLock {
     /**
      * 使用默认的请求锁的超时时间，指定锁的过期时间
      *
-     * @param redisTemplate
+     * @param redisTemplate a
      * @param lockKey       锁的key（Redis的Key）
      * @param expireTime    锁的过期时间(单位：秒)
      */
@@ -145,7 +143,7 @@ public class RedisLock {
     /**
      * 使用默认的锁的过期时间，指定请求锁的超时时间
      *
-     * @param redisTemplate
+     * @param redisTemplate a
      * @param lockKey       锁的key（Redis的Key）
      * @param timeOut       请求锁的超时时间(单位：毫秒)
      */
@@ -157,7 +155,7 @@ public class RedisLock {
     /**
      * 锁的过期时间和请求锁的超时时间都是用指定的值
      *
-     * @param redisTemplate
+     * @param redisTemplate a
      * @param lockKey       锁的key（Redis的Key）
      * @param expireTime    锁的过期时间(单位：秒)
      * @param timeOut       请求锁的超时时间(单位：毫秒)
@@ -170,7 +168,7 @@ public class RedisLock {
     /**
      * 尝试获取锁 超时返回
      *
-     * @return
+     * @return a
      */
     public boolean tryLock() {
         // 生成随机key
@@ -222,16 +220,16 @@ public class RedisLock {
         }
     }
 
-    /**
-     * 解锁
-     * <p>
-     * 可以通过以下修改，让这个锁实现更健壮：
-     * <p>
-     * 不使用固定的字符串作为键的值，而是设置一个不可猜测（non-guessable）的长随机字符串，作为口令串（token）。
-     * 不使用 DEL 命令来释放锁，而是发送一个 Lua 脚本，这个脚本只在客户端传入的值和键的口令串相匹配时，才对键进行删除。
-     * 这两个改动可以防止持有过期锁的客户端误删现有锁的情况出现。
-     */
     public Boolean unlock() {
+        /**
+         * 解锁
+         * <p>
+         * 可以通过以下修改，让这个锁实现更健壮：
+         * <p>
+         * 不使用固定的字符串作为键的值，而是设置一个不可猜测（non-guessable）的长随机字符串，作为口令串（token）。
+         * 不使用 DEL 命令来释放锁，而是发送一个 Lua 脚本，这个脚本只在客户端传入的值和键的口令串相匹配时，才对键进行删除。
+         * 这两个改动可以防止持有过期锁的客户端误删现有锁的情况出现。
+         */
         // 只有加锁成功并且锁还有效才去释放锁
         // 只有加锁成功并且锁还有效才去释放锁
         if (locked) {
@@ -265,7 +263,7 @@ public class RedisLock {
      * @param key     锁的Key
      * @param value   锁里面的值
      * @param seconds 过去时间（秒）
-     * @return
+     * @return a
      */
     private Boolean set(final String key, final String value, final long seconds) {
         Assert.isTrue(!StringUtils.isEmpty(key), "key不能为空");
@@ -284,8 +282,6 @@ public class RedisLock {
     /**
      * @param millis 毫秒
      * @param nanos  纳秒
-     * @Title: seleep
-     * @Description: 线程等待时间
      * @author yuhao.wang
      */
     private void seleep(long millis, int nanos) {

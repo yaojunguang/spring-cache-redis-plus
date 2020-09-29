@@ -115,7 +115,8 @@ public class SpringCacheRedisPlusConfig {
      * 2、每次创建缓存的时候维护一个Map，存放key和方法信息（反射）。当要刷新缓存的时候，根据key获取方法信息。
      * 通过获取其代理对象执行方法，刷新缓存。
      *
-     * @param factory factory
+     * @param factory       factory
+     * @param redisTemplate redisTemplate
      * @return 缓存管理对象
      */
     @Bean

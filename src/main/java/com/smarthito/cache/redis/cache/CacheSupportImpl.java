@@ -132,10 +132,15 @@ public class CacheSupportImpl implements CacheSupport {
     }
 
     /**
-     * 解析SpEL表达式，获取注解上的key属性值
-     * 直接扣的Spring解析表达式部分代码
+     * 解析SpEL表达式，获取注解上的key属性值 直接扣的Spring解析表达式部分代码
      *
-     * @return
+     * @param caches f
+     * @param key    a
+     * @param method a
+     * @param args   a
+     * @param target a
+     * @param result a
+     * @return a
      */
     protected Object generateKey(Collection<? extends Cache> caches, String key, Method method, Object[] args,
                                  Object target, Object result) {
@@ -152,12 +157,6 @@ public class CacheSupportImpl implements CacheSupport {
         return this.keyGenerator.generate(target, method, args);
     }
 
-    /**
-     * 获取类信息
-     *
-     * @param target
-     * @return
-     */
     private Class<?> getTargetClass(Object target) {
         Class<?> targetClass = AopProxyUtils.ultimateTargetClass(target);
         if (targetClass == null && target != null) {
@@ -166,14 +165,9 @@ public class CacheSupportImpl implements CacheSupport {
         return targetClass;
     }
 
-    /**
-     * 通过cache名称获取cache列表
-     *
-     * @param annotatedCacheNames
-     * @return
-     */
-    public Collection<? extends Cache> getCache(Set<String> annotatedCacheNames) {
 
+    public Collection<? extends Cache> getCache(Set<String> annotatedCacheNames) {
+        //通过cache名称获取cache列表
         Collection<String> cacheNames = generateValue(annotatedCacheNames);
 
         if (cacheNames == null) {
@@ -195,13 +189,8 @@ public class CacheSupportImpl implements CacheSupport {
         return cacheKey + INVOCATION_CACHE_KEY_SUFFIX;
     }
 
-    /**
-     * 获取注解上的value属性值（cacheNames）
-     *
-     * @param annotatedCacheNames
-     * @return
-     */
     private Collection<String> generateValue(Set<String> annotatedCacheNames) {
+        //获取注解上的value属性值（cacheNames）
         Collection<String> cacheNames = new HashSet<>();
         for (final String cacheName : annotatedCacheNames) {
             String[] cacheParams = cacheName.split(SEPARATOR);

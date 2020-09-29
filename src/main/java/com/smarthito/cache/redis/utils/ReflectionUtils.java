@@ -26,7 +26,6 @@ public class ReflectionUtils {
      * @param parameterTypes : 父类中的方法参数类型
      * @return 父类中的方法对象
      */
-
     public static Method getDeclaredMethod(Object object, String methodName, Class<?>... parameterTypes) {
         Method method = null;
 
@@ -53,7 +52,6 @@ public class ReflectionUtils {
      * @param parameters     : 父类中的方法参数
      * @return 父类中方法的执行结果
      */
-
     public static Object invokeMethod(Object object, String methodName, Class<?>[] parameterTypes,
                                       Object[] parameters) {
         //根据 对象、方法名和对应的方法参数 通过反射 调用上面的方法获取 Method 对象  
@@ -81,7 +79,6 @@ public class ReflectionUtils {
      * @param fieldName : 父类中的属性名
      * @return 父类中的属性对象
      */
-
     public static Field getDeclaredField(Object object, String fieldName) {
         Field field = null;
 
@@ -108,7 +105,6 @@ public class ReflectionUtils {
      * @param fieldName : 父类中的属性名
      * @param value     : 将要设置的值
      */
-
     public static void setFieldValue(Object object, String fieldName, Object value) {
 
         //根据 对象和属性名通过反射 调用上面的方法获取 Field对象  
@@ -133,7 +129,6 @@ public class ReflectionUtils {
      * @param fieldName : 父类中的属性名
      * @return : 父类中的属性值
      */
-
     public static Object getFieldValue(Object object, String fieldName) {
 
         //根据 对象和属性名通过反射 调用上面的方法获取 Field对象  
@@ -152,13 +147,6 @@ public class ReflectionUtils {
         return null;
     }
 
-    /**
-     * 获取 目标对象
-     *
-     * @param proxy 代理对象
-     * @return
-     * @throws Exception
-     */
     public static Object getTarget(Object proxy) throws Exception {
         if (!AopUtils.isAopProxy(proxy)) {
             return proxy;//不是代理对象

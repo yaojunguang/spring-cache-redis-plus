@@ -25,8 +25,8 @@ public interface CacheSupport {
     /**
      * 按容器以及指定键更新缓存
      *
-     * @param cacheName
-     * @param cacheKey
+     * @param cacheName 缓存字段名称
+     * @param cacheKey  缓存的key
      */
     void refreshCacheByKey(String cacheName, String cacheKey);
 

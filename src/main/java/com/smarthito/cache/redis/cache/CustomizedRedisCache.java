@@ -56,10 +56,8 @@ public class CustomizedRedisCache extends RedisCache {
         return valueWrapper;
     }
 
-    /**
-     * 刷新缓存数据
-     */
     private void refreshCache(Object key, String cacheKeyStr) {
+        //刷新缓存数据
         Long ttl = this.redisOperations.getExpire(cacheKeyStr);
         if (null != ttl && ttl <= CustomizedRedisCache.this.preloadSecondTime) {
             // 尽量少的去开启线程，因为线程池是有限的

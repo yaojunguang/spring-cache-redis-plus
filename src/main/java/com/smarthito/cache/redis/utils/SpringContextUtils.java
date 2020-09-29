@@ -12,15 +12,15 @@ public class SpringContextUtils {
 
     /**
      * 实现ApplicationContextAware接口的context注入函数, 将其存入静态变量.
+     *
+     * @param applicationContext 上下文
      */
     public static void setApplicationContext(ApplicationContext applicationContext) {
         System.out.println("ApplicationContext注入");
-        SpringContextUtils.applicationContext = applicationContext; // NOSONAR
+        SpringContextUtils.applicationContext = applicationContext;
+        // NOSONAR
     }
 
-    /**
-     * 从静态变量ApplicationContext中取得Bean, 自动转型为所赋值对象的类型.
-     */
     @SuppressWarnings("unchecked")
     public static <T> T getBean(String name) {
         checkApplicationContext();
@@ -29,17 +29,14 @@ public class SpringContextUtils {
 
     /**
      * 从静态变量ApplicationContext中取得Bean, 自动转型为所赋值对象的类型.
+     *
+     * @param clazz 类名
+     * @param <T>   类型
+     * @return 实体
      */
     public static <T> T getBean(Class<T> clazz) {
         checkApplicationContext();
         return (T) applicationContext.getBean(clazz);
-    }
-
-    /**
-     * 清除applicationContext静态变量.
-     */
-    public static void cleanApplicationContext() {
-        applicationContext = null;
     }
 
     private static void checkApplicationContext() {

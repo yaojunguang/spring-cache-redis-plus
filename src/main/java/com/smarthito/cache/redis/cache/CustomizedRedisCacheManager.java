@@ -105,12 +105,8 @@ public class CustomizedRedisCacheManager extends RedisCacheManager {
 
     }
 
-    /**
-     * 获取过期时间
-     *
-     * @return 时间
-     */
     public long getExpirationSecondTime(String[] cacheParams) {
+        //获取过期时间
         if (cacheParams == null || cacheParams.length == 0) {
             return 0;
         }
@@ -133,12 +129,8 @@ public class CustomizedRedisCacheManager extends RedisCacheManager {
         return expirationSecondTime < 0 ? 0 : expirationSecondTime;
     }
 
-    /**
-     * 获取自动刷新时间
-     *
-     * @return 时间
-     */
     private long getPreloadSecondTime(String[] cacheParams) {
+        //获取自动刷新时间
         // 自动刷新时间，默认是0
         long preloadSecondTime = 0L;
         // 设置自动刷新时间
@@ -195,7 +187,7 @@ public class CustomizedRedisCacheManager extends RedisCacheManager {
      * @param cacheName            缓存名称
      * @param expirationSecondTime 过期时间
      * @param preloadSecondTime    制动刷新时间
-     * @return
+     * @return aa
      */
     public CustomizedRedisCache getMissingCache(String cacheName, long expirationSecondTime, long preloadSecondTime) {
         logger.info("缓存 cacheName：{}，过期时间:{}, 自动刷新时间:{}", cacheName, expirationSecondTime, preloadSecondTime);

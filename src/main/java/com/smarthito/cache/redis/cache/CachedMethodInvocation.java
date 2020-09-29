@@ -80,12 +80,6 @@ public final class CachedMethodInvocation implements Serializable {
         this.parameterTypes = parameterTypes;
     }
 
-    /**
-     * 必须重写equals和hashCode方法，否则放到set集合里没法去重
-     *
-     * @param o
-     * @return
-     */
     @Override
     public boolean equals(Object o) {
         if (this == o) {

@@ -5,7 +5,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import java.util.concurrent.ThreadPoolExecutor;
 
 /**
- *
+ * @author yaojunguang
  */
 public class ThreadTaskUtils {
     private static ThreadPoolTaskExecutor taskExecutor = null;
