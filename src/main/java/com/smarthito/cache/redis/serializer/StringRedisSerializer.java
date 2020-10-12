@@ -1,6 +1,7 @@
 package com.smarthito.cache.redis.serializer;
 
-import com.alibaba.fastjson.JSON;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.util.Assert;
 
@@ -38,6 +39,9 @@ public class StringRedisSerializer implements RedisSerializer<String> {
 
     @Override
     public byte[] serialize(String object) {
+        if (object == null) {
+            return null;
+        }
         //强制修改key为空的情况下的生成
         if (object.contains(SIMPLE_KEY)) {
             int index = object.lastIndexOf(":");
@@ -45,8 +49,13 @@ public class StringRedisSerializer implements RedisSerializer<String> {
                 object = object.substring(0, index + 1) + "{}";
             }
         }
-        String string = JSON.toJSONString(object);
-        string = string.replace(TARGET, REPLACEMENT);
-        return string.getBytes(charset);
+        try {
+            String string = new ObjectMapper().writeValueAsString(object);
+            string = string.replace(TARGET, REPLACEMENT);
+            return string.getBytes(charset);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

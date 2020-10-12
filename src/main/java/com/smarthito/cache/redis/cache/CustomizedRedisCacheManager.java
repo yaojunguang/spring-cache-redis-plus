@@ -22,7 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * 支持方法上配置过期时间
  * 支持热加载缓存：缓存即将过期时主动刷新缓存
  *
- * @author yuhao.wang
+ * @author yaojunguang
  */
 public class CustomizedRedisCacheManager extends RedisCacheManager {
 
