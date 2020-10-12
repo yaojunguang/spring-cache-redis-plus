@@ -161,6 +161,15 @@ public class CustomizedRedisCacheManager extends RedisCacheManager {
         if (cache != null) {
             return cache;
         } else {
+            //加入一个分布式锁发起的锁，避免对实例同步发起调用
+//            RedisLock redisLock = new RedisLock(redisOperations, cacheName + "_lock", 1000L);
+//            try {
+//                if (redisLock.tryLock()) {
+//                }
+//            } finally {
+//                redisLock.unlock();
+//            }
+
             // Fully synchronize now for missing cache creation...
             synchronized (cacheMap) {
                 cache = cacheMap.get(cacheName);

@@ -25,7 +25,7 @@ public class CustomizedRedisCache extends RedisCache {
      * 缓存主动在失效前强制刷新缓存的时间
      * 单位：秒
      */
-    private long preloadSecondTime;
+    private final long preloadSecondTime;
     private final RedisCacheConfiguration config;
     private final RedisTemplate<String, Object> redisOperations;
 
