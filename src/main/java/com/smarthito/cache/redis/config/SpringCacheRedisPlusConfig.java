@@ -9,6 +9,7 @@ import com.smarthito.cache.redis.cache.CustomizedRedisCacheManager;
 import com.smarthito.cache.redis.serializer.StringRedisSerializer;
 import com.smarthito.cache.redis.utils.SpringContextUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.cache.interceptor.SimpleKeyGenerator;
@@ -24,6 +25,8 @@ import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 
 import java.time.Duration;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 /**
  * @author yuhao.wang
@@ -56,9 +59,21 @@ public class SpringCacheRedisPlusConfig {
      *
      * @return key生成对象
      */
-    @Bean(name = "firstParamKeyGenerator")
+    @Qualifier
+    @Bean(name = "hyphenKeyGenerator")
     public KeyGenerator firstParamKeyGenerator() {
-        return (target, method, params) -> params[0].toString();
+        return (target, method, params) -> {
+            if (params.length > 0) {
+                return Arrays.stream(params).map(item -> {
+                    if (item == null) {
+                        return "NULL";
+                    } else {
+                        return item.toString();
+                    }
+                }).collect(Collectors.joining("-"));
+            }
+            return "{}";
+        };
     }
 
     /**
@@ -68,13 +83,13 @@ public class SpringCacheRedisPlusConfig {
      * GenericToStringSerializer、Jackson2JsonRedisSerializer、JacksonJsonRedisSerializer、JdkSerializationRedisSerializer、OxmSerializer、StringRedisSerializer。
      * 在此我们将自己配置RedisTemplate并定义Serializer。
      *
-     * @param redisConnectionFactory 工厂
+     * @param factory 工厂
      * @return 操作对象
      */
     @Bean
-    public RedisTemplate<String, Object> redisTemplate(LettuceConnectionFactory redisConnectionFactory) {
+    public RedisTemplate<String, Object> redisTemplate(LettuceConnectionFactory factory) {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
-        redisTemplate.setConnectionFactory(redisConnectionFactory);
+        redisTemplate.setConnectionFactory(factory);
 
         Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer<>(Object.class);
         jackson2JsonRedisSerializer.setObjectMapper(getObjectMapper());

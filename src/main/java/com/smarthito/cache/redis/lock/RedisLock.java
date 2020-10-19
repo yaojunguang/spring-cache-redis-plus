@@ -234,11 +234,10 @@ public class RedisLock {
         // 只有加锁成功并且锁还有效才去释放锁
         if (locked) {
             return (Boolean) redisTemplate.execute((RedisCallback<Boolean>) connection -> {
-                Long result = 0L;
 
-                result = connection.eval(UNLOCK_LUA.getBytes(), ReturnType.INTEGER, 1, lockKey.getBytes(StandardCharsets.UTF_8), lockValue.getBytes(StandardCharsets.UTF_8));
+                Long result = connection.eval(UNLOCK_LUA.getBytes(), ReturnType.INTEGER, 1, lockKey.getBytes(StandardCharsets.UTF_8), lockValue.getBytes(StandardCharsets.UTF_8));
 
-                if (result == 0 && !StringUtils.isEmpty(lockKeyLog)) {
+                if (result != null && result == 0 && !StringUtils.isEmpty(lockKeyLog)) {
                     logger.info("Redis分布式锁，解锁{}失败！解锁时间：{}", lockKeyLog, System.currentTimeMillis());
                 }
 
@@ -271,7 +270,7 @@ public class RedisLock {
 
             Boolean result = connection.set(lockKey.getBytes(StandardCharsets.UTF_8), value.getBytes(StandardCharsets.UTF_8), Expiration.seconds(seconds), RedisStringCommands.SetOption.SET_IF_ABSENT);
 
-            if (!StringUtils.isEmpty(lockKeyLog) && result) {
+            if (!StringUtils.isEmpty(lockKeyLog) && result != null && result) {
                 logger.info("获取锁{}的时间：{}", lockKeyLog, System.currentTimeMillis());
             }
 
