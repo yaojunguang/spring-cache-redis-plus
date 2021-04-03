@@ -1,7 +1,6 @@
-package com.smarthito.cache.redis.utils;
+package com.smarthito.cache.utils;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.aop.framework.AdvisedSupport;
 import org.springframework.aop.framework.AopProxy;
 import org.springframework.aop.support.AopUtils;
@@ -14,10 +13,8 @@ import java.lang.reflect.Method;
  *
  * @author yaojunguang
  */
-
+@Slf4j
 public class ReflectionUtils {
-
-    private static final Logger logger = LoggerFactory.getLogger(ReflectionUtils.class);
 
     /**
      * 循环向上转型, 获取对象的 DeclaredMethod
@@ -60,7 +57,7 @@ public class ReflectionUtils {
                 return method.invoke(object, parameters);
             }
         } catch (Exception e) {
-            logger.info(e.getMessage(), e);
+            log.info(e.getMessage(), e);
         }
         return null;
     }
@@ -102,10 +99,10 @@ public class ReflectionUtils {
                 //将 object 中 field 所代表的值 设置为 value
                 field.set(object, value);
             } else {
-                logger.info("filed:" + fieldName + ",not exit");
+                log.info("filed:" + fieldName + ",not exit");
             }
         } catch (Exception e) {
-            logger.info(e.getMessage(), e);
+            log.info(e.getMessage(), e);
         }
 
     }
@@ -129,7 +126,7 @@ public class ReflectionUtils {
                 return field.get(object);
             }
         } catch (Exception e) {
-            logger.info(e.getMessage(), e);
+            log.info(e.getMessage(), e);
         }
 
         return null;

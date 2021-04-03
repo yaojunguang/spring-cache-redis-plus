@@ -1,7 +1,6 @@
-package com.smarthito.cache.redis.lock;
+package com.smarthito.cache.lock;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.RedisStringCommands;
 import org.springframework.data.redis.connection.ReturnType;
 import org.springframework.data.redis.core.RedisCallback;
@@ -38,26 +37,10 @@ import java.util.UUID;
  *
  * @author yuhao.wangwang
  */
+@Slf4j
 public class RedisLock {
 
-    private static Logger logger = LoggerFactory.getLogger(RedisLock.class);
-
     private RedisTemplate redisTemplate;
-
-    /**
-     * 将key 的值设为value ，当且仅当key 不存在，等效于 SETNX。
-     */
-    public static final String NX = "NX";
-
-    /**
-     * seconds — 以秒为单位设置 key 的过期时间，等效于EXPIRE key seconds
-     */
-    public static final String EX = "EX";
-
-    /**
-     * 调用set后的返回值
-     */
-    public static final String OK = "OK";
 
     /**
      * 默认请求锁的超时时间(ms 毫秒)
@@ -72,23 +55,17 @@ public class RedisLock {
     /**
      * 解锁的lua脚本
      */
-    public static final String UNLOCK_LUA;
-
-    static {
-        StringBuilder sb = new StringBuilder();
-        sb.append("if redis.call(\"get\",KEYS[1]) == ARGV[1] ");
-        sb.append("then ");
-        sb.append("    return redis.call(\"del\",KEYS[1]) ");
-        sb.append("else ");
-        sb.append("    return 0 ");
-        sb.append("end ");
-        UNLOCK_LUA = sb.toString();
-    }
+    public static final String UNLOCK_LUA = "if redis.call(\"get\",KEYS[1]) == ARGV[1] " +
+            "then " +
+            "    return redis.call(\"del\",KEYS[1]) " +
+            "else " +
+            "    return 0 " +
+            "end ";
 
     /**
      * 锁标志对应的key
      */
-    private String lockKey;
+    private final String lockKey;
 
     /**
      * 记录到日志的锁标志对应的key
@@ -238,7 +215,7 @@ public class RedisLock {
                 Long result = connection.eval(UNLOCK_LUA.getBytes(), ReturnType.INTEGER, 1, lockKey.getBytes(StandardCharsets.UTF_8), lockValue.getBytes(StandardCharsets.UTF_8));
 
                 if (result != null && result == 0 && !StringUtils.isEmpty(lockKeyLog)) {
-                    logger.info("Redis分布式锁，解锁{}失败！解锁时间：{}", lockKeyLog, System.currentTimeMillis());
+                    log.info("Redis分布式锁，解锁{}失败！解锁时间：{}", lockKeyLog, System.currentTimeMillis());
                 }
 
                 locked = result == 0;
@@ -271,7 +248,7 @@ public class RedisLock {
             Boolean result = connection.set(lockKey.getBytes(StandardCharsets.UTF_8), value.getBytes(StandardCharsets.UTF_8), Expiration.seconds(seconds), RedisStringCommands.SetOption.SET_IF_ABSENT);
 
             if (!StringUtils.isEmpty(lockKeyLog) && result != null && result) {
-                logger.info("获取锁{}的时间：{}", lockKeyLog, System.currentTimeMillis());
+                log.info("获取锁{}的时间：{}", lockKeyLog, System.currentTimeMillis());
             }
 
             return result;
@@ -287,7 +264,7 @@ public class RedisLock {
         try {
             Thread.sleep(millis, random.nextInt(nanos));
         } catch (InterruptedException e) {
-            logger.info("获取分布式锁休眠被中断：", e);
+            log.info("获取分布式锁休眠被中断：", e);
         }
     }
 

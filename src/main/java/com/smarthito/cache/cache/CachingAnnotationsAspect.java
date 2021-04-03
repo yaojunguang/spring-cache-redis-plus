@@ -1,4 +1,4 @@
-package com.smarthito.cache.redis.cache;
+package com.smarthito.cache.cache;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -6,12 +6,12 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.aop.framework.AopProxyUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.BridgeMethodResolver;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ClassUtils;
 
+import javax.annotation.Resource;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
@@ -24,24 +24,24 @@ import java.util.*;
 @Component
 public class CachingAnnotationsAspect {
 
-    @Autowired
+    @Resource
     private CacheSupport cacheSupport;
 
     private <T extends Annotation> List<T> getMethodAnnotations(AnnotatedElement ae, Class<T> annotationType) {
-        List<T> anns = new ArrayList<T>(2);
+        List<T> annotations = new ArrayList<T>(2);
         // look for raw annotation
         T ann = ae.getAnnotation(annotationType);
         if (ann != null) {
-            anns.add(ann);
+            annotations.add(ann);
         }
         // look for meta-annotations
         for (Annotation metaAnn : ae.getAnnotations()) {
             ann = metaAnn.annotationType().getAnnotation(annotationType);
             if (ann != null) {
-                anns.add(ann);
+                annotations.add(ann);
             }
         }
-        return (anns.isEmpty() ? null : anns);
+        return (annotations.isEmpty() ? null : annotations);
     }
 
     private Method getSpecificmethod(ProceedingJoinPoint pjp) {

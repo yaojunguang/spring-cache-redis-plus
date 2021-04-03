@@ -1,4 +1,4 @@
-package com.smarthito.cache.redis.utils;
+package com.smarthito.cache.utils;
 
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 

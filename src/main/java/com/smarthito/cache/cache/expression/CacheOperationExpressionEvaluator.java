@@ -1,4 +1,4 @@
-package com.smarthito.cache.redis.cache.expression;
+package com.smarthito.cache.cache.expression;
 
 import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.factory.BeanFactory;

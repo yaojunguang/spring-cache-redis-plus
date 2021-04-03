@@ -1,4 +1,4 @@
-package com.smarthito.cache.redis.cache;
+package com.smarthito.cache.cache;
 
 import java.lang.reflect.Method;
 import java.util.Set;

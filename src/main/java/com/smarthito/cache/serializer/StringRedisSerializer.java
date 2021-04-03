@@ -1,4 +1,4 @@
-package com.smarthito.cache.redis.serializer;
+package com.smarthito.cache.serializer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

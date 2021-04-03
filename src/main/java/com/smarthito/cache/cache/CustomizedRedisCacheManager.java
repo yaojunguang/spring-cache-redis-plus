@@ -1,11 +1,9 @@
-package com.smarthito.cache.redis.cache;
+package com.smarthito.cache.cache;
 
-import com.smarthito.cache.redis.utils.ReflectionUtils;
-import com.smarthito.cache.redis.utils.SpringContextUtils;
-import com.smarthito.cache.redis.utils.StringUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.smarthito.cache.utils.ReflectionUtils;
+import com.smarthito.cache.utils.SpringContextUtils;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.cache.Cache;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
@@ -13,6 +11,7 @@ import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.cache.RedisCacheWriter;
 import org.springframework.data.redis.core.RedisTemplate;
 
+import javax.annotation.Resource;
 import java.time.Duration;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
@@ -24,9 +23,8 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * @author yaojunguang
  */
+@Slf4j
 public class CustomizedRedisCacheManager extends RedisCacheManager {
-
-    private static final Logger logger = LoggerFactory.getLogger(CustomizedRedisCacheManager.class);
 
     /**
      * 父类cacheMap字段
@@ -62,7 +60,7 @@ public class CustomizedRedisCacheManager extends RedisCacheManager {
     private final RedisCacheConfiguration config;
     private final RedisTemplate<String, Object> redisOperations;
 
-    @Autowired
+    @Resource
     private DefaultListableBeanFactory beanFactory;
 
     public CustomizedRedisCacheManager(RedisCacheWriter cacheWriter, RedisCacheConfiguration config, RedisTemplate<String, Object> redisOperations) {
@@ -84,7 +82,7 @@ public class CustomizedRedisCacheManager extends RedisCacheManager {
         String[] cacheParams = name.split(SEPARATOR);
         String cacheName = cacheParams[0];
 
-        if (StringUtil.isBlank(cacheName)) {
+        if (StringUtils.isBlank(cacheName)) {
             return null;
         }
 
@@ -117,7 +115,7 @@ public class CustomizedRedisCacheManager extends RedisCacheManager {
         // 设置key有效时间
         if (cacheParams.length > 1) {
             String expirationStr = cacheParams[1];
-            if (!StringUtil.isBlank(expirationStr)) {
+            if (StringUtils.isNotBlank(expirationStr)) {
                 // 支持配置过期时间使用EL表达式读取配置文件时间
                 if (expirationStr.contains(MARK)) {
                     expirationStr = beanFactory.resolveEmbeddedValue(expirationStr);
@@ -136,7 +134,7 @@ public class CustomizedRedisCacheManager extends RedisCacheManager {
         // 设置自动刷新时间
         if (cacheParams.length > 2) {
             String preloadStr = cacheParams[2];
-            if (!StringUtil.isBlank(preloadStr)) {
+            if (StringUtils.isNotBlank(preloadStr)) {
                 // 支持配置刷新时间使用EL表达式读取配置文件时间
                 if (preloadStr.contains(MARK)) {
                     preloadStr = beanFactory.resolveEmbeddedValue(preloadStr);
@@ -162,15 +160,6 @@ public class CustomizedRedisCacheManager extends RedisCacheManager {
             return cache;
         } else {
             //加入一个分布式锁发起的锁，避免对实例同步发起调用
-//            RedisLock redisLock = new RedisLock(redisOperations, cacheName + "_lock", 1000L);
-//            try {
-//                if (redisLock.tryLock()) {
-//                }
-//            } finally {
-//                redisLock.unlock();
-//            }
-
-            // Fully synchronize now for missing cache creation...
             synchronized (cacheMap) {
                 cache = cacheMap.get(cacheName);
                 if (cache == null) {
@@ -199,7 +188,7 @@ public class CustomizedRedisCacheManager extends RedisCacheManager {
      * @return aa
      */
     public CustomizedRedisCache getMissingCache(String cacheName, long expirationSecondTime, long preloadSecondTime) {
-        logger.info("缓存 cacheName：{}，过期时间:{}, 自动刷新时间:{}", cacheName, expirationSecondTime, preloadSecondTime);
+        log.info("缓存 cacheName：{}，过期时间:{}, 自动刷新时间:{}", cacheName, expirationSecondTime, preloadSecondTime);
         boolean allowInFlightCacheCreation = (boolean) ReflectionUtils.getFieldValue(getInstance(), SUPER_FIELD_ALLOW_IN_FLIGHT_CACHE_CREATION);
         return allowInFlightCacheCreation ? new CustomizedRedisCache(cacheName, cacheWriter, config.entryTtl(Duration.ofSeconds(expirationSecondTime))
                 , redisOperations, preloadSecondTime) : null;

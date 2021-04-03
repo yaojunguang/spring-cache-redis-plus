@@ -1,10 +1,9 @@
-package com.smarthito.cache.redis.cache;
+package com.smarthito.cache.cache;
 
-import com.smarthito.cache.redis.lock.RedisLock;
-import com.smarthito.cache.redis.utils.SpringContextUtils;
-import com.smarthito.cache.redis.utils.ThreadTaskUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.smarthito.cache.lock.RedisLock;
+import com.smarthito.cache.utils.SpringContextUtils;
+import com.smarthito.cache.utils.ThreadTaskUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.cache.RedisCache;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheWriter;
@@ -13,9 +12,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 /**
  * Created by @author yangmingtian on 2020/1/8
  */
+@Slf4j
 public class CustomizedRedisCache extends RedisCache {
-
-    private static final Logger logger = LoggerFactory.getLogger(CustomizedRedisCache.class);
 
     private CacheSupport getCacheSupport() {
         return SpringContextUtils.getBean(CacheSupport.class);
@@ -70,12 +68,12 @@ public class CustomizedRedisCache extends RedisCache {
                         Long ttl1 = CustomizedRedisCache.this.redisOperations.getExpire(cacheKeyStr);
                         if (null != ttl1 && ttl1 <= CustomizedRedisCache.this.preloadSecondTime) {
                             // 通过获取代理方法信息重新加载缓存数据
-                            logger.info("refresh key:{}", key);
+                            log.info("refresh key:{}", key);
                             CustomizedRedisCache.this.getCacheSupport().refreshCacheByKey(CustomizedRedisCache.super.getName(), cacheKeyStr);
                         }
                     }
                 } catch (Exception e) {
-                    logger.info(e.getMessage(), e);
+                    log.info(e.getMessage(), e);
                 } finally {
                     redisLock.unlock();
                 }

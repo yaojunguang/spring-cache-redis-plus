@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.smarthito.cache.redis.cache.expression;
+package com.smarthito.cache.cache.expression;
 
 import org.springframework.context.expression.MethodBasedEvaluationContext;
 import org.springframework.core.ParameterNameDiscoverer;

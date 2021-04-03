@@ -1,24 +1,21 @@
-package com.smarthito.cache.redis.cache;
+package com.smarthito.cache.cache;
 
-import com.smarthito.cache.redis.cache.expression.CacheOperationExpressionEvaluator;
-import com.smarthito.cache.redis.utils.RedisTemplateUtils;
-import com.smarthito.cache.redis.utils.ReflectionUtils;
-import com.smarthito.cache.redis.utils.SpringContextUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.smarthito.cache.cache.expression.CacheOperationExpressionEvaluator;
+import com.smarthito.cache.utils.ReflectionUtils;
+import com.smarthito.cache.utils.SpringContextUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.aop.framework.AopProxyUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.context.expression.AnnotatedElementKey;
 import org.springframework.data.redis.cache.RedisCacheManager;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.MethodInvoker;
 
+import javax.annotation.Resource;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -28,27 +25,22 @@ import java.util.concurrent.TimeUnit;
  *
  * @author yaojunguang
  */
+@Slf4j
 @Component("cacheSupport")
 public class CacheSupportImpl implements CacheSupport {
-    private static final Logger logger = LoggerFactory.getLogger(CacheSupportImpl.class);
 
     private final CacheOperationExpressionEvaluator evaluator = new CacheOperationExpressionEvaluator();
 
-    private final String SEPARATOR = "#";
+    private static final String SEPARATOR = "#";
 
-    private final String INVOCATION_CACHE_KEY_SUFFIX = ":invocation_cache_key_suffix";
+    private static final String INVOCATION_CACHE_KEY_SUFFIX = ":invocation_cache_key_suffix";
 
-    @Autowired
-    private SpringContextUtils springContextUtils;
-
-    @Autowired
+    @Resource
     private KeyGenerator keyGenerator;
-
-    @Autowired
+    @Resource
     private RedisCacheManager cacheManager;
-
-    @Autowired
-    private RedisConnectionFactory redisConnectionFactory;
+    @Resource
+    private RedisTemplate<String, Object> redisTemplate;
 
     @Override
     public void registerInvocation(Object targetBean,
@@ -70,7 +62,6 @@ public class CacheSupportImpl implements CacheSupport {
             if (cache instanceof CustomizedRedisCache) {
                 CustomizedRedisCache redisCache = ((CustomizedRedisCache) cache);
                 // 将方法信息放到redis缓存
-                RedisTemplate redisTemplate = RedisTemplateUtils.getRedisTemplate(redisConnectionFactory);
                 redisTemplate.opsForValue().set(getInvocationCacheKey(redisCache.getCacheKey(key)),
                         invocation, redisCache.getExpirationSecondTime(), TimeUnit.SECONDS);
             }
@@ -79,7 +70,6 @@ public class CacheSupportImpl implements CacheSupport {
 
     @Override
     public void refreshCacheByKey(String cacheName, String cacheKey) {
-        RedisTemplate redisTemplate = RedisTemplateUtils.getRedisTemplate(redisConnectionFactory);
         //在redis拿到方法信息，然后刷新缓存
         CachedMethodInvocation invocation = (CachedMethodInvocation) redisTemplate.opsForValue().get(getInvocationCacheKey(cacheKey));
         if (invocation != null) {
@@ -97,17 +87,16 @@ public class CacheSupportImpl implements CacheSupport {
             // 通过cacheManager获取操作缓存的cache对象
             Cache cache = cacheManager.getCache(cacheName);
             // 通过Cache对象更新缓存
+            assert cache != null;
             cache.put(invocation.getKey(), computed);
-
-            RedisTemplate redisTemplate = RedisTemplateUtils.getRedisTemplate(redisConnectionFactory);
             CustomizedRedisCache redisCache = (CustomizedRedisCache) cache;
             long expireTime = redisCache.getExpirationSecondTime();
             // 刷新redis中缓存法信息key的有效时间
             redisTemplate.expire(getInvocationCacheKey(redisCache.getCacheKey(invocation.getKey())), expireTime, TimeUnit.SECONDS);
 
-            logger.info("缓存：{}-{}，重新加载数据", cacheName, invocation.getKey().toString().getBytes());
+            log.info("缓存：{}-{}，重新加载数据", cacheName, invocation.getKey().toString().getBytes());
         } catch (Exception e) {
-            logger.info("刷新缓存失败：" + e.getMessage(), e);
+            log.info("刷新缓存失败：" + e.getMessage(), e);
         }
 
     }
@@ -120,8 +109,7 @@ public class CacheSupportImpl implements CacheSupport {
             args = invocation.getArguments().toArray();
         }
         // 通过先获取Spring的代理对象，在根据这个对象获取真实的实例对象
-        Object target = ReflectionUtils.getTarget(springContextUtils.getBean(Class.forName(invocation.getTargetBean())));
-
+        Object target = ReflectionUtils.getTarget(SpringContextUtils.getBean(Class.forName(invocation.getTargetBean())));
         final MethodInvoker invoker = new MethodInvoker();
         invoker.setTargetObject(target);
         invoker.setArguments(args);

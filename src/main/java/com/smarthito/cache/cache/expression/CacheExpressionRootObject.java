@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.smarthito.cache.redis.cache.expression;
+package com.smarthito.cache.cache.expression;
 
 import org.springframework.cache.Cache;
 import org.springframework.util.Assert;

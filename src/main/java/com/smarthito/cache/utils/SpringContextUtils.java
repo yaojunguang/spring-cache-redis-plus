@@ -1,4 +1,4 @@
-package com.smarthito.cache.redis.utils;
+package com.smarthito.cache.utils;
 
 import org.springframework.context.ApplicationContext;
 
@@ -16,9 +16,7 @@ public class SpringContextUtils {
      * @param applicationContext 上下文
      */
     public static void setApplicationContext(ApplicationContext applicationContext) {
-        System.out.println("ApplicationContext注入");
         SpringContextUtils.applicationContext = applicationContext;
-        // NOSONAR
     }
 
     @SuppressWarnings("unchecked")
