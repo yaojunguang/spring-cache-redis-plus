@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
  * @author yaojunguang at 2021/4/3 11:42 上午
  */
 
-@Component
+@Component("hyphenKeyGenerator")
 public class HyphenKeyGenerator implements KeyGenerator {
     @Override
     public Object generate(Object o, Method method, Object... objects) {

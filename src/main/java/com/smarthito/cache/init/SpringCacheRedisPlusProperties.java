@@ -2,6 +2,7 @@ package com.smarthito.cache.init;
 
 import lombok.Data;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 /**
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 @Data
 @Component
+@ConfigurationProperties(prefix = "spring.cache.redis.plus")
 @ConditionalOnProperty(name = "spring.cache.redis.plus.enabled", havingValue = "true")
 public class SpringCacheRedisPlusProperties {
 
