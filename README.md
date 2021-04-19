@@ -9,7 +9,7 @@ spring cache 扩展
     <dependency>
         <groupId>com.smarthito</groupId>
         <artifactId>spring-cache-redis-plus</artifactId>
-        <version>1.2.0</version>
+        <version>1.4.0</version>
     </dependency>
 ```
 
