@@ -7,11 +7,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator;
 import com.smarthito.cache.cache.CustomizedRedisCacheManager;
 import com.smarthito.cache.serializer.StringRedisSerializer;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.cache.interceptor.SimpleKeyGenerator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.cache.RedisCacheWriter;
@@ -19,6 +21,7 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
+import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration;
 
 import javax.annotation.Resource;
 import java.time.Duration;
@@ -28,6 +31,7 @@ import java.time.Duration;
  * @author yaojunguang
  */
 @Configuration
+@Import({BeanValidatorPluginsConfiguration.class,})
 @ConditionalOnProperty(name = "spring.cache.redis.plus.enabled", havingValue = "true")
 public class SpringCacheRedisPlusAutoConfiguration {
 
@@ -55,6 +59,7 @@ public class SpringCacheRedisPlusAutoConfiguration {
      * @return 操作对象
      */
     @Bean
+    @ConditionalOnMissingBean
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory factory) {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(factory);
