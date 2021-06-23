@@ -8,8 +8,6 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.smarthito.cache.cache.CacheSupport;
-import com.smarthito.cache.cache.CacheSupportImpl;
 import com.smarthito.cache.cache.CachingAnnotationsAspect;
 import com.smarthito.cache.cache.CustomizedRedisCacheManager;
 import com.smarthito.cache.serializer.StringRedisSerializer;
@@ -43,12 +41,6 @@ public class SpringCacheRedisPlusAutoConfiguration {
 
     @Resource
     private SpringCacheRedisPlusProperties properties;
-
-    @Bean("cacheSupport")
-    @ConditionalOnMissingBean
-    public CacheSupport cacheSupport() {
-        return new CacheSupportImpl();
-    }
 
     @Bean
     @ConditionalOnMissingBean
@@ -108,7 +100,7 @@ public class SpringCacheRedisPlusAutoConfiguration {
         objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
         objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
         objectMapper.activateDefaultTyping(LaissezFaireSubTypeValidator.instance,
-                ObjectMapper.DefaultTyping.EVERYTHING,
+                ObjectMapper.DefaultTyping.NON_FINAL,
                 JsonTypeInfo.As.WRAPPER_ARRAY);
         return objectMapper;
     }

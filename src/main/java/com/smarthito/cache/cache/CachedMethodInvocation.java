@@ -13,7 +13,7 @@ import java.util.List;
  *
  * @author yuhao.wang
  */
-public final class CachedMethodInvocation implements Serializable {
+public class CachedMethodInvocation implements Serializable {
 
     private static final long serialVersionUID = 4053574712960451939L;
 
