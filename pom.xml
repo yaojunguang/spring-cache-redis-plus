@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.smarthito</groupId>
     <artifactId>spring-cache-redis-plus</artifactId>
-    <version>1.4.1</version>
+    <version>1.4.2</version>
     <name>${project.artifactId}</name>
     <url>https://github.com/yaojunguang/spring-cache-redis-plus</url>
     <description>spring cache redis plus</description>
