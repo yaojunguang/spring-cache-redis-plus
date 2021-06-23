@@ -5,11 +5,12 @@ spring cache 扩展
 支持redis缓存注解支持缓存失效时间和临期自动更新缓存
 
 # 添加依赖
+
 ```
     <dependency>
         <groupId>com.smarthito</groupId>
         <artifactId>spring-cache-redis-plus</artifactId>
-        <version>1.4.1</version>
+        <version>1.4.2</version>
     </dependency>
 ```
 
@@ -20,7 +21,6 @@ spring cache 扩展
 ```
 @Cacheable(value = "cache:subject:recommend#300#60", key = "#userId" /*, keyGenerator = "hyphenKeyGenerator", unless = "#result == null"*/)
 ```
-
 
 ```
  export GPG_TTY=$(tty)
