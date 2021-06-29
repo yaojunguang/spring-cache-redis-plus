@@ -175,7 +175,11 @@ public class RedisLock {
     public boolean lock() {
         lockValue = UUID.randomUUID().toString();
         //不存在则添加 且设置过期时间（单位ms）
-        return set(lockKey, lockValue, expireTime);
+        if (set(lockKey, lockValue, expireTime)) {
+            locked = true;
+            return true;
+        }
+        return false;
     }
 
     /**

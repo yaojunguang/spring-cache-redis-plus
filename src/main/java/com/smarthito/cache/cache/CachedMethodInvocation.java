@@ -1,6 +1,8 @@
 package com.smarthito.cache.cache;
 
 
+import org.springframework.aop.framework.AopProxyUtils;
+
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -29,6 +31,14 @@ public class CachedMethodInvocation implements Serializable {
     public CachedMethodInvocation(Object key, Object targetBean, Method targetMethod, Class[] parameterTypes, Object[] arguments) {
         this.key = key;
         this.targetBean = targetBean.getClass().getName();
+        if (this.targetBean.startsWith("com.sun.proxy")) {
+            Class<?>[] interfaces = targetBean.getClass().getInterfaces();
+            if (interfaces.length > 0) {
+                this.targetBean = interfaces[0].getName();
+            }
+        }
+        //
+        //this.targetBean = targetClass.getName();
         this.targetMethod = targetMethod.getName();
         if (arguments != null && arguments.length != 0) {
             this.arguments = Arrays.asList(arguments);
@@ -38,6 +48,14 @@ public class CachedMethodInvocation implements Serializable {
                 this.parameterTypes.add(clazz.getName());
             }
         }
+    }
+
+    private Class<?> getTargetClass(Object target) {
+        Class<?> targetClass = AopProxyUtils.ultimateTargetClass(target);
+        if (targetClass == null && target != null) {
+            targetClass = target.getClass();
+        }
+        return targetClass;
     }
 
     public Object getKey() {

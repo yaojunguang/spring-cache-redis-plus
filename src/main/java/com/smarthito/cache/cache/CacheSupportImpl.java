@@ -55,7 +55,6 @@ public class CacheSupportImpl implements CacheSupport {
 
         // 获取key的SpEL值
         Object key = generateKey(caches, cacheKey, targetMethod, invocationArgs, targetBean, CacheOperationExpressionEvaluator.NO_RESULT);
-
         // 新建一个代理对象（记录了缓存注解的方法类信息）
         final CachedMethodInvocation invocation = new CachedMethodInvocation(key, targetBean, targetMethod, invocationParamTypes, invocationArgs);
         for (Cache cache : caches) {
@@ -94,7 +93,7 @@ public class CacheSupportImpl implements CacheSupport {
             // 刷新redis中缓存法信息key的有效时间
             redisTemplate.expire(getInvocationCacheKey(redisCache.getCacheKey(invocation.getKey())), expireTime, TimeUnit.SECONDS);
 
-            log.info("缓存：{}-{}，重新加载数据", cacheName, invocation.getKey().toString().getBytes());
+            log.info("缓存：{}:{}，重新加载数据", cacheName, invocation.getKey().toString());
         } catch (Exception e) {
             log.info("刷新缓存失败：" + e.getMessage(), e);
         }
