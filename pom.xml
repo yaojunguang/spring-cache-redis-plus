@@ -10,14 +10,14 @@
     </parent>
     <groupId>com.smarthito</groupId>
     <artifactId>spring-cache-redis-plus</artifactId>
-    <version>1.5.1</version>
+    <version>1.5.2</version>
     <name>${project.artifactId}</name>
     <url>https://github.com/yaojunguang/spring-cache-redis-plus</url>
     <description>spring cache redis plus</description>
 
     <properties>
         <java.version>1.8</java.version>
-        <lombok.version>1.18.18</lombok.version>
+        <lombok.version>1.18.20</lombok.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
