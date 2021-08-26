@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import lombok.SneakyThrows;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -16,7 +15,7 @@ public class DateJsonDeSerializer extends JsonDeserializer<Date> {
 
     @SneakyThrows
     @Override
-    public Date deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+    public Date deserialize(JsonParser p, DeserializationContext ctx) {
         String s = p.readValueAs(String.class);
         SimpleDateFormat dateTimeFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
         return dateTimeFormatter.parse(s);
