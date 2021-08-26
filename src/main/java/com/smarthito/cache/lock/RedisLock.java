@@ -1,13 +1,13 @@
 package com.smarthito.cache.lock;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.redis.connection.RedisStringCommands;
 import org.springframework.data.redis.connection.ReturnType;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.types.Expiration;
 import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Random;
@@ -40,7 +40,7 @@ import java.util.UUID;
 @Slf4j
 public class RedisLock {
 
-    private RedisTemplate redisTemplate;
+    private final RedisTemplate redisTemplate;
 
     /**
      * 默认请求锁的超时时间(ms 毫秒)
@@ -162,7 +162,7 @@ public class RedisLock {
             }
 
             // 每次请求等待一段时间
-            seleep(10, 50000);
+            sleep(10, 50000);
         }
         return locked;
     }
@@ -197,7 +197,7 @@ public class RedisLock {
             }
 
             // 每次请求等待一段时间
-            seleep(10, 50000);
+            sleep(10, 50000);
         }
     }
 
@@ -264,7 +264,7 @@ public class RedisLock {
      * @param nanos  纳秒
      * @author yuhao.wang
      */
-    private void seleep(long millis, int nanos) {
+    private void sleep(long millis, int nanos) {
         try {
             Thread.sleep(millis, random.nextInt(nanos));
         } catch (InterruptedException e) {
