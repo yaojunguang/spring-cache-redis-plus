@@ -7,13 +7,10 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator;
-import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.smarthito.cache.cache.CachingAnnotationsAspect;
 import com.smarthito.cache.cache.CustomizedRedisCacheManager;
-import com.smarthito.cache.serializer.DateJsonDeSerializer;
-import com.smarthito.cache.serializer.DateJsonSerializer;
 import com.smarthito.cache.serializer.StringRedisSerializer;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -33,7 +30,6 @@ import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration
 
 import javax.annotation.Resource;
 import java.time.Duration;
-import java.util.Date;
 
 
 /**
@@ -102,10 +98,6 @@ public class SpringCacheRedisPlusAutoConfiguration {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new Jdk8Module());
         objectMapper.registerModule(new JavaTimeModule());
-        SimpleModule simpleModule = new SimpleModule();
-        simpleModule.addSerializer(Date.class, new DateJsonSerializer());
-        simpleModule.addDeserializer(Date.class, new DateJsonDeSerializer());
-        objectMapper.registerModule(simpleModule);
         objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
