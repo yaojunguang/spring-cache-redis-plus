@@ -3,6 +3,7 @@ package com.smarthito.cache.cache;
 import com.smarthito.cache.cache.expression.CacheOperationExpressionEvaluator;
 import com.smarthito.cache.utils.ReflectionUtils;
 import com.smarthito.cache.utils.SpringContextUtils;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.aop.framework.AopProxyUtils;
 import org.springframework.cache.Cache;
@@ -15,7 +16,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.MethodInvoker;
 
-import javax.annotation.Resource;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
