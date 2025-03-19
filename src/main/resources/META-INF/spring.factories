@@ -1,0 +1,3 @@
+org.springframework.context.ApplicationContextInitializer=\
+com.smarthito.cache.init.SpringCacheRedisPlusApplicationContextInitializer
+org.springframework.boot.env.EnvironmentPostProcessor=

@@ -1,4 +1,3 @@
-com.smarthito.cache.init.SpringCacheRedisPlusApplicationContextInitializer
 com.smarthito.cache.init.SpringCacheRedisPlusAutoConfiguration
 com.smarthito.cache.init.SpringCacheRedisPlusProperties
 com.smarthito.cache.generator.HyphenKeyGenerator
