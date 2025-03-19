@@ -12,6 +12,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.smarthito.cache.cache.CachingAnnotationsAspect;
 import com.smarthito.cache.cache.CustomizedRedisCacheManager;
 import com.smarthito.cache.serializer.StringRedisSerializer;
+import jakarta.annotation.Resource;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cache.interceptor.KeyGenerator;
@@ -28,7 +29,6 @@ import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration;
 
-import jakarta.annotation.Resource;
 import java.time.Duration;
 
 
@@ -76,8 +76,7 @@ public class SpringCacheRedisPlusAutoConfiguration {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(factory);
 
-        Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer<>(Object.class);
-        jackson2JsonRedisSerializer.setObjectMapper(getObjectMapper());
+        Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer<>(getObjectMapper(), Object.class);
 
         // 设置值（value）的序列化采用Jackson2JsonRedisSerializer。
         redisTemplate.setValueSerializer(jackson2JsonRedisSerializer);
@@ -122,8 +121,7 @@ public class SpringCacheRedisPlusAutoConfiguration {
      */
     @Bean
     public RedisCacheManager cacheManager(RedisConnectionFactory factory, RedisTemplate<String, Object> redisTemplate) {
-        Jackson2JsonRedisSerializer<Object> redisSerializer = new Jackson2JsonRedisSerializer<>(Object.class);
-        redisSerializer.setObjectMapper(getObjectMapper());
+        Jackson2JsonRedisSerializer<Object> redisSerializer = new Jackson2JsonRedisSerializer<>(getObjectMapper(), Object.class);
 
         RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig();
         config = config.entryTtl(Duration.ofSeconds(properties.getExpiration()))

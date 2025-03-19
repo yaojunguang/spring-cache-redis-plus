@@ -34,7 +34,7 @@ public class CustomizedRedisCacheManager extends RedisCacheManager {
     /**
      * 父类allowInFlightCacheCreation字段
      */
-    private static final String SUPER_FIELD_ALLOW_IN_FLIGHT_CACHE_CREATION = "allowInFlightCacheCreation";
+    private static final String SUPER_FIELD_ALLOW_IN_FLIGHT_CACHE_CREATION = "allowRuntimeCacheCreation";
 
     /**
      * 父类updateCacheNames方法
@@ -189,8 +189,9 @@ public class CustomizedRedisCacheManager extends RedisCacheManager {
      */
     public CustomizedRedisCache getMissingCache(String cacheName, long expirationSecondTime, long preloadSecondTime) {
         log.info("缓存 cacheName：{}，过期时间:{}, 自动刷新时间:{}", cacheName, expirationSecondTime, preloadSecondTime);
-        boolean allowInFlightCacheCreation = (boolean) ReflectionUtils.getFieldValue(getInstance(), SUPER_FIELD_ALLOW_IN_FLIGHT_CACHE_CREATION);
-        return allowInFlightCacheCreation ? new CustomizedRedisCache(cacheName, cacheWriter, config.entryTtl(Duration.ofSeconds(expirationSecondTime))
-                , redisOperations, preloadSecondTime) : null;
+        Boolean allowInFlightCacheCreation = (Boolean) ReflectionUtils.getFieldValue(getInstance(), SUPER_FIELD_ALLOW_IN_FLIGHT_CACHE_CREATION);
+        return Boolean.TRUE.equals(allowInFlightCacheCreation) ?
+                new CustomizedRedisCache(cacheName, cacheWriter, config.entryTtl(Duration.ofSeconds(expirationSecondTime)), redisOperations, preloadSecondTime)
+                : null;
     }
 }

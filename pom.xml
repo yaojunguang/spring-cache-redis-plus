@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.smarthito</groupId>
     <artifactId>spring-cache-redis-plus</artifactId>
-    <version>1.6.1</version>
+    <version>1.6.3</version>
     <name>${project.artifactId}</name>
     <url>https://github.com/yaojunguang/spring-cache-redis-plus</url>
     <description>spring cache redis plus</description>
@@ -107,6 +107,14 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <argLine>--add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED
+                    </argLine>
+                </configuration>
+            </plugin>
             <!--   central发布插件    -->
             <plugin>
                 <groupId>org.sonatype.central</groupId>

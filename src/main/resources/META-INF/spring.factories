@@ -1,3 +1,8 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.smarthito.cache.init.SpringCacheRedisPlusAutoConfiguration,\
+com.smarthito.cache.init.SpringCacheRedisPlusProperties,\
+com.smarthito.cache.generator.HyphenKeyGenerator,\
+com.smarthito.cache.cache.CacheSupportImpl
 org.springframework.context.ApplicationContextInitializer=\
 com.smarthito.cache.init.SpringCacheRedisPlusApplicationContextInitializer
 org.springframework.boot.env.EnvironmentPostProcessor=
